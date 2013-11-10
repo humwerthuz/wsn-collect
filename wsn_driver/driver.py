@@ -13,12 +13,10 @@ class AsyncUdpServer(asyncore.dispatcher):
         self.create_socket(socket.AF_INET6, socket.SOCK_DGRAM)
         self.bind((settings.host_conf['ip'], settings.host_conf['port']))
 
-    def handle_connect(self):
-        print "Server started..."
-
     def handle_read(self):
-        print "Log: received data, updating local storage"
-        self.write_handler(data=self.recv(1024))
+        if getattr(settings, 'log', False):
+            print "Log: received data, updating local storage"
+        self.write_handler(data=self.recvfrom(1024))
 
     def handle_write(self):
         pass
