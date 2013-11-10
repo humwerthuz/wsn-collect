@@ -1,0 +1,15 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = https://github.com/afchacon/nixpic_backend_v2.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+
+[remote "heroku"]
+	url = git@heroku.com:nixpic-staging.git
+	fetch = +refs/heads/*:refs/remotes/heroku/*
