@@ -63,7 +63,11 @@ function GetData(){
         url: '/load/' + ip + '/last',
         type: 'get',
         success: function(data){
-            PutData(data.acx, data.acy, data.psr);
+            try{
+                PutData(data.acx, data.acy, data.psr);
+            } catch(e){
+
+            }
         }
     });
 }
