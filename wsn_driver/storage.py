@@ -11,4 +11,7 @@ class CacheKeyStorage(object):
         else:
             return None
 
+    def get_all(self):
+        return self.__storage
+
 cache_key_storage = CacheKeyStorage()

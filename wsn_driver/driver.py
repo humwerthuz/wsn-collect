@@ -34,10 +34,15 @@ class WsnCollectDriver(object):
         print "Asyncore loop thread running!"
         while True:
             asyncore.loop(count=5)
-            time.sleep(0.05)
+            time.sleep(0.001)
 
     def write_handler(self, data):
-        self.__storage.insert('key', data)
+        _data, _addr = data
+        _list = self.__storage.get(_addr[0])
+        if _list:
+            _list.append(_data)
+        else:
+            self.__storage.insert(_addr[0], [_data])
 
     def get_storage(self):
         return self.__storage

@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph data</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="http://static.pureexample.com/js/flot/excanvas.min.js"></script>
+    <script type="text/javascript" src="http://static.pureexample.com/js/flot/jquery.flot.min.js"></script>
+    <script type="text/javascript" src="http://static.pureexample.com/js/flot/jquery.flot.time.js"></script>
+    <script type="text/javascript" src="http://static.pureexample.com/js/flot/jquery.flot.axislabels.js"></script>
+
+</head>
+<body>
+
+<!-- CSS -->
+<style type="text/css">
+#flotcontainerxacc {
+    width: 600px;
+    height: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
+#flotcontaineryacc {
+    width: 600px;
+    height: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
+#flotcontainerpress {
+    width: 600px;
+    height: 200px;
+    text-align: center;
+    margin: 0 auto;
+}
+
+</style>
+
+
+<!-- Javascript -->
+<script>
+var dataForXAcc = [];
+var dataForYAcc = [];
+var dataForPress = [];
+var dataset;
+var totalPoints = 50;
+var updateInterval = 500;
+var now = new Date().getTime();
+
+function PutData(xacc, yacc, press) {
+    dataForXAcc.shift();
+    dataForYAcc.shift();
+    dataForPress.shift();
+
+    while (dataForXAcc.length < totalPoints) {
+        dataForXAcc.push([now += updateInterval, xacc]);
+        dataForYAcc.push([now += updateInterval, yacc]);
+        dataForPress.push([now += updateInterval, press]);
+    }
+}
+
+function GetData(){
+    var ip = 'aaaa::21a:4c00:1508:a6b8';
+    $.ajax({
+        url: '/load/' + ip + '/last',
+        type: 'get',
+        success: function(data){
+            PutData(data.acx, data.acy, data.psr);
+        }
+    });
+}
+
+var optionsForXAcc = {
+    series: {
+        lines: {
+            show: true,
+            lineWidth: 1.2,
+            fill: true
+        }
+    },
+    xaxis: {
+        mode: "time",
+        tickSize: [2, "second"],
+        tickFormatter: function (v, axis) {
+            var date = new Date(v);
+
+            if (date.getSeconds() % 20 == 0) {
+                var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return hours + ":" + minutes + ":" + seconds;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "Time",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 10
+    },
+    yaxis: {
+        min: 0,
+        max: 1024,
+        tickSize: 5,
+        tickFormatter: function (v, axis) {
+            if (v % 100 == 0) {
+                return v;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "X axis accel",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 6
+    },
+    legend: {
+        labelBoxBorderColor: "#fff"
+    }
+};
+
+var optionsForYAcc = {
+    series: {
+        lines: {
+            show: true,
+            lineWidth: 1.2,
+            fill: true
+        }
+    },
+    xaxis: {
+        mode: "time",
+        tickSize: [2, "second"],
+        tickFormatter: function (v, axis) {
+            var date = new Date(v);
+
+            if (date.getSeconds() % 20 == 0) {
+                var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return hours + ":" + minutes + ":" + seconds;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "Time",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 10
+    },
+    yaxis: {
+        min: 0,
+        max: 1024,
+        tickSize: 5,
+        tickFormatter: function (v, axis) {
+            if (v % 100 == 0) {
+                return v;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "Y axis accel",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 6
+    },
+    legend: {
+        labelBoxBorderColor: "#fff"
+    }
+};
+
+var optionsForPress = {
+    series: {
+        lines: {
+            show: true,
+            lineWidth: 1.2,
+            fill: true
+        }
+    },
+    xaxis: {
+        mode: "time",
+        tickSize: [2, "second"],
+        tickFormatter: function (v, axis) {
+            var date = new Date(v);
+
+            if (date.getSeconds() % 20 == 0) {
+                var hours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+                var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+                var seconds = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+
+                return hours + ":" + minutes + ":" + seconds;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "Time",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 10
+    },
+    yaxis: {
+        min: 17000,
+        max: 17500,
+        tickSize: 25,
+        tickFormatter: function (v, axis) {
+            if (v % 50 == 0) {
+                return v;
+            } else {
+                return "";
+            }
+        },
+        axisLabel: "Pressure",
+        axisLabelUseCanvas: true,
+        axisLabelFontSizePixels: 12,
+        axisLabelFontFamily: 'Verdana, Arial',
+        axisLabelPadding: 6
+    },
+    legend: {
+        labelBoxBorderColor: "#fff"
+    }
+};
+
+$(document).ready(function () {
+    GetData();
+
+    datasetForXAcc = [
+        { label: "X axis accel", data: dataForXAcc }
+    ];
+
+    datasetForYAcc = [
+        { label: "Y axis accel", data: dataForYAcc }
+    ];
+
+    datasetForPress = [
+        { label: "Pressure", data: dataForPress }
+    ];
+
+    $.plot($("#flotcontainerxacc"), datasetForXAcc, optionsForXAcc);
+    $.plot($("#flotcontaineryacc"), datasetForYAcc, optionsForYAcc);
+    $.plot($("#flotcontainerpress"), datasetForPress, optionsForPress);
+
+    function update() {
+        GetData();
+
+        $.plot($("#flotcontainerxacc"), datasetForXAcc, optionsForXAcc);
+        $.plot($("#flotcontaineryacc"), datasetForYAcc, optionsForYAcc);
+        $.plot($("#flotcontainerpress"), datasetForPress, optionsForPress);
+        setTimeout(update, updateInterval);
+    }
+
+    update();
+});
+
+
+
+</script>
+
+<!-- HTML -->
+<div id="flotcontainerxacc"></div>
+<div id="flotcontaineryacc"></div>
+<div id="flotcontainerpress"></div>
+</body>
+</html>
