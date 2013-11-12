@@ -63,10 +63,10 @@ function GetData(){
         url: '/load/' + ip + '/last',
         type: 'get',
         success: function(data){
-            try{
+            if (data.hasOwnProperty("acx") && data.hasOwnProperty("acy") && data.hasOwnProperty("psr")){
                 PutData(data.acx, data.acy, data.psr);
-            } catch(e){
-
+            } else {
+                console.error("Invalid json payload");
             }
         }
     });
