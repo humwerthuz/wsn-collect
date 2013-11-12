@@ -11,9 +11,9 @@ def parse_data(raw, item_delimiter=', ', key_delimiter=': '):
 
 @app.route("/load/<ip>/last")
 def load_last(ip):
-    data = app_driver.get_storage().get(ip)[-1]
+    data = app_driver.get_storage().get(ip)
     if data:
-        return Response(json.dumps(parse_data(data)), content_type="application/json")
+        return Response(json.dumps(parse_data(data[-1])), content_type="application/json")
     else:
         return Response(json.dumps({"status": "no data"}), content_type="application/json")
 
