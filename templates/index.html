@@ -1,26 +1,102 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>WSN Viewer</title>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>Wireless Sensor Network Data Collector</title>
+
+        <link href="/static/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link href="/static/bootstrap/css/docs.css" rel="stylesheet">
+
+        <style type="text/css">
+        </style>
+        <script type="text/javascript">
+            var currentMote = null;
+
+            function load_sink(){
+                $(".nav.bs-sidenav > li").removeClass("active");
+                $("#sink").addClass("active");
+                $("#fragment-container").load('load/aaaa::21a:4c00:1508:7a4b/sink');
+            }
+            function load_motelist(){
+                $(".nav.bs-sidenav > li").removeClass("active");
+                $("#motelist").addClass("active");
+                $("#fragment-container").load('load/motelist');
+            }
+            function load_mote(ip){
+                $(".nav.bs-sidenav > li").removeClass("active");
+                $("#motelist").addClass("active");
+                $("#fragment-container").load('load/' + ip + '/accel/html');
+            }
+        </script>
+    </head>
+
+  <body style="">
+      <div class="container">
+          <div class="row">
+              <div class="span12 text-center">
+                  <div class="page-header">
+                      <h2>Wireless Sensor Network Data Collector</h2>
+                  </div>
+              </div>
+          </div>
+          <div class="row-fluid">
+              <div class="col-md-3">
+                <div class="bs-sidebar">
+                    <ul class="nav bs-sidenav">
+                        <li id="motelist" class="active"><a  href="#">Mote List</a></li>
+                        <li id="sink"><a  href="#">Sink statistics</a></li>
+                    </ul>
+                </div>
+              </div>
+              <div class="col-md-9">
+                <div id="fragment-container">
+                    <div class="row">
+                        <div class="col-md-12">
+{#                            <table class="table">#}
+{#                                <thead>#}
+{#                                    <th>IPv6 address</th>#}
+{#                                    <th>Total timed out</th>#}
+{#                                    <th>Total received</th>#}
+{#                                    <th>Total forwarded</th>#}
+{#                                    <th>Total discarded</th>#}
+{#                                    <th>Current Temp (Farenheit * 10)</th>#}
+{#                                    <th>Current Rank</th>#}
+{#                                </thead>#}
+{#                                {% for node in data%}#}
+{#                                <tbody>#}
+{#                                    <tr onclick="load_mote('{{ node['ip'] }}')">#}
+{#                                        <td>{{ node['ip'] }}</td>#}
+{#                                        <td>{{ node['data']['tdt']  }}</td>#}
+{#                                        <td>{{ node['data']['fwd'] + node['data']['dsc'] }}</td>#}
+{#                                        <td>{{ node['data']['fwd'] }}</td>#}
+{#                                        <td>{{ node['data']['dsc']  }}</td>#}
+{#                                        <td>{{ node['data']['tmp'] }}</td>#}
+{#                                        <td>{{ node['data']['crk']  }}</td>#}
+{#                                    </tr>#}
+{#                                </tbody>#}
+{#                                {% endfor %}#}
+{#                            </table>#}
+                        </div>
+                    </div>
+                </div>
+              </div>
+          </div>
+      </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/js/jquery-1.10.2.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.js"></script>
+    <script src="/static/js/jquery.flot.js"></script>
     <script type="text/javascript">
-        function load(){
-            var container = $("#showData");
-            var ip = 'aaaa::21a:4c00:1508:a6b8';
-            $.ajax({
-                url: '/load/' + ip + '/last',
-                type: 'get',
-                success: function(data){
-                    $(container).html(JSON.stringify(data));
-                }
-            });
-        }
-        setInterval(load, 500);
+        $("#sink").on("click", load_sink);
+        $("#motelist").on("click", load_motelist);
     </script>
-</head>
-<body>
-    <h3>
-        <div id="showData"></div>
-    </h3>
 </body>
 </html>

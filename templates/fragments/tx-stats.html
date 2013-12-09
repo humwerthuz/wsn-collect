@@ -1,0 +1,20 @@
+<script type="text/javascript">
+    var var_array = [{{ var_array }}];
+    var d1 = [];
+    for(var i =0 ; i < var_array.length - 1; i++){
+        d1.push([i, var_array[i]]);
+    }
+    $.plot("#placeholder", [{
+        data: d1,
+        lines: {show: false},
+        points: {show: true}
+    }]);
+</script>
+
+<div id="placeholder" style="width: 100%; height:350px;"></div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h4>Sink - TTL for received packets</h4>
+        <hr>
+    </div>
+</div>

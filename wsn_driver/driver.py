@@ -1,6 +1,7 @@
 import threading
 import time
 import settings
+import signal
 import asyncore
 import socket
 from storage import cache_key_storage
@@ -8,10 +9,14 @@ from storage import cache_key_storage
 
 class AsyncUdpServer(asyncore.dispatcher):
     def __init__(self, write_handler):
+        print "Async inited!"
         asyncore.dispatcher.__init__(self)
         self.write_handler = write_handler
         self.create_socket(socket.AF_INET6, socket.SOCK_DGRAM)
-        self.bind((settings.host_conf['ip'], settings.host_conf['port']))
+        try:
+            self.bind((settings.host_conf['ip'], settings.host_conf['port']))
+        except socket.error:
+            print "Socket already in use. Not killing, maybe is caused by flask debug"
 
     def handle_read(self):
         if getattr(settings, 'log', False):
@@ -25,14 +30,18 @@ class AsyncUdpServer(asyncore.dispatcher):
 class WsnCollectDriver(object):
     def __init__(self):
         self.__storage = cache_key_storage
+        signal.signal(signal.SIGTERM, self.shutdown)
+        self.must_run = True
         self.__async_handler = AsyncUdpServer(self.write_handler)
         self.__loop_thread = threading.Thread(target=self.loop_handler)
         self.__loop_thread.start()
 
-    @staticmethod
-    def loop_handler():
+    def shutdown(self):
+        self.must_run = False
+
+    def loop_handler(self):
         print "Asyncore loop thread running!"
-        while True:
+        while self.must_run:
             asyncore.loop(count=5)
             time.sleep(0.001)
 

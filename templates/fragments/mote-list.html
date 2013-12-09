@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <th>IPv6 address</th>
+                <th>Raw acceleration (X)</th>
+                <th>Raw acceleration (Y)</th>
+                <th>Raw pressure</th>
+            </thead>
+            {% for node in data%}
+            <tbody>
+                <tr onclick="load_mote('{{ node['ip'] }}')">
+                    <td>{{ node['ip'] }}</td>
+                    <td>{{ node['data']['acx']  }}</td>
+                    <td>{{ node['data']['acy']  }}</td>
+                    <td>{{ node['data']['psr']  }}</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>

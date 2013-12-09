@@ -1,0 +1,60 @@
+<script type="text/javascript">
+    var arrayCounter = 0;
+    var dx = [];
+    var dy = [];
+
+    var currentMote = '{{ current_mote }}';
+    var varX = [{{ var_array_x }}];
+    var varY = [{{ var_array_y }}];
+    var options = {};
+
+    function map_data(raw){
+        var G0 = 512; //Roughly to 0G
+        return raw;
+    }
+
+    function update_data(data){
+        dx.shift();
+        dy.shift();
+        dx.push([++arrayCounter, map_data(parseInt(data['datax']))]);
+        dy.push([arrayCounter, map_data(parseInt(data['datay']))]);
+        console.log(map_data(parseInt(data['datax'])));
+        update_graph();
+    }
+
+    function update_graph(){
+        $.plot("#placeholder", [dx], options);
+    }
+
+    function update_wrapper(){
+        $.ajax({
+            url: '/load/' + currentMote + '/accel/json',
+            type: 'GET',
+            dataType: 'json',
+            success: update_data,
+            error: function(data){
+                alert('ups!');
+            }
+        });
+    }
+
+    for(var i =0 ; i < varX.length - 1; i++){
+        dx.push([i, map_data(varX[i])]);
+    }
+    for(var i =0 ; i < varY.length - 1; i++){
+        dy.push([i, map_data(varY[i])]);
+    }
+    arrayCounter = varX.length;
+    update_graph();
+
+    setInterval(update_wrapper, 200);
+
+</script>
+
+<div id="placeholder" style="width: 100%; height:350px;"></div>
+<div class="row">
+    <div class="col-md-12 text-center">
+        <h4>Acceleration on G force</h4>
+        <hr>
+    </div>
+</div>
